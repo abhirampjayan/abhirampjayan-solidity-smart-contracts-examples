@@ -2,21 +2,28 @@
 
 pragma solidity ^0.8.0;
 
-contract MyContract {
-    string secret;
+contract Ownable {
     address owner;
 
-    modifier onlyOwener() {
+    modifier onlyOwner() {
         require(msg.sender == owner, "Must be owner");
         _;
     }
 
-    constructor(string memory _secret) public {
-        secret = _secret;
+    constructor() public {
         owner = msg.sender;
     }
+}
 
-    function getSecret() public view onlyOwener returns (string memory) {
+contract MyContract is Ownable {
+    string secret;
+
+    constructor(string memory _secret) public {
+        secret = _secret;
+        super;
+    }
+
+    function getSecret() public view onlyOwner returns (string memory) {
         return secret;
     }
 }
