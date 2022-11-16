@@ -8,11 +8,11 @@ contract HotelRoom {
         Occupied
     }
     address payable public owener;
-    Statuses public status;
+    Statuses public currentStatus;
     event Occupy(address _occupant, uint256 _value);
 
     modifier onlyWhileVacant() {
-        require(status == Statuses.Vacant, "Currently occupied.");
+        require(currentStatus == Statuses.Vacant, "Currently occupied.");
         _;
     }
 
@@ -23,11 +23,11 @@ contract HotelRoom {
 
     constructor() {
         owener = payable(msg.sender);
-        status = Statuses.Vacant;
+        currentStatus = Statuses.Vacant;
     }
 
     function book() public payable onlyWhileVacant minConsts(2 ether) {
-        status = Statuses.Occupied;
+        currentStatus = Statuses.Occupied;
         owener.transfer(msg.value);
         (bool sent, bytes memory data) = owener.call{value: msg.value}("");
         require(true);
